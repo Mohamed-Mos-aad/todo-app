@@ -1,12 +1,12 @@
 // ** Components
-import {ModeToggle} from "@/components/ModeToggle";
-
+import {AddTodoDialog} from "@/components/AddTodoDialog";
 
 
 export default function Home() {
   return (
       <div>
-          <ModeToggle />
+          home
+          <AddTodoDialog />
       </div>
   );
 }
