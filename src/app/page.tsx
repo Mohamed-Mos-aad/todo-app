@@ -1,13 +1,15 @@
 // ** Components
 import DashboardCard from "@/components/cards/DashboardCard";
+import { DashboardTable } from "@/components/table/DashboardTable";
 // ** Assets
 import { Gauge, NotebookText, Zap } from "lucide-react";
-import { DashboardTable } from "@/components/table/DashboardTable";
 
-export default function Home() {
+
+
+
+export default async function Home() {
     return (
         <main className="flex flex-col gap-8 p-6 min-h-screen bg-background">
-
             {/* Header Section */}
             <section className="space-y-1">
                 <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -18,7 +20,7 @@ export default function Home() {
                     queue. Focus on high priority items to maintain your velocity.
                 </p>
             </section>
-
+``
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <DashboardCard

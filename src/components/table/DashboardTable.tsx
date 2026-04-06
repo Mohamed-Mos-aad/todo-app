@@ -37,7 +37,7 @@ export function DashboardTable() {
             <Table>
                 <TableHeader className="bg-muted/50">
                     <TableRow>
-                        <TableHead className="w-[120px] font-bold text-foreground">ID</TableHead>
+                        <TableHead className="w-30 font-bold text-foreground">ID</TableHead>
                         <TableHead className="font-bold text-foreground">Title</TableHead>
                         <TableHead className="font-bold text-foreground">Status</TableHead>
                         <TableHead className="font-bold text-foreground">Created At</TableHead>
