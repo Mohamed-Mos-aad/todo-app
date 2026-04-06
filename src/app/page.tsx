@@ -5,6 +5,7 @@ import { DashboardTable } from "@/components/table/DashboardTable";
 import { Gauge, NotebookText, Zap } from "lucide-react";
 import { getTodosListAction } from "../../actions/todo.actions";
 
+export const dynamic = "force-dynamic";
 
 
 
