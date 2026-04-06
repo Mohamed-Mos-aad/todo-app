@@ -20,7 +20,6 @@ export default async function Home() {
                     queue. Focus on high priority items to maintain your velocity.
                 </p>
             </section>
-``
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <DashboardCard

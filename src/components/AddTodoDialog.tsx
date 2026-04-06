@@ -26,7 +26,7 @@ export function AddTodoDialog() {
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden bg-card border-border">
+            <DialogContent className="sm:max-w-106.25 p-0 overflow-hidden bg-card border-border">
                 <form onSubmit={(e) => e.preventDefault()}>
                     <div className="p-6">
                         <DialogHeader>
