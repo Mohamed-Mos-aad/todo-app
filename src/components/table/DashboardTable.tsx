@@ -13,17 +13,17 @@ import {
 import { PaginationDemo } from "@/components/PaginationDemo";
 import { Button } from "@/components/ui/button";
 // ** Assets
-import { Edit, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 // ** Actions
 import { deleteTodoListAction } from "../../../actions/todo.actions";
 import { todoProps } from "@/types";
+import { AddTodoDialog } from "../AddTodoDialog";
 
 
 
 export function DashboardTable({todo}: {todo: todoProps[]}) {
     // ** Hooks && Tools
     const router = useRouter();
-
 
 
     // ** Handlers
@@ -56,12 +56,10 @@ export function DashboardTable({todo}: {todo: todoProps[]}) {
                                     {todo.completed? 'Completed' : "UnCompleted"}
                                 </span>
                             </TableCell>
-                            <TableCell className="text-muted-foreground">{todo.createdAt.toLocaleDateString()}</TableCell>
+                            <TableCell className="text-muted-foreground">{todo.createdAt?.toLocaleDateString()}</TableCell>
                             <TableCell className="text-right px-6">
                                 <div className="flex justify-end gap-2">
-                                    <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-primary">
-                                        <Edit className="size-4" />
-                                    </Button>
+                                    <AddTodoDialog todo={todo} />
                                     <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-destructive" onClick={()=>{deleteTodoHandler(todo.id)}}>
                                         <Trash2 className="size-4" />
                                     </Button>

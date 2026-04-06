@@ -18,8 +18,23 @@ export const createTodoListAction = async ({title,description}:{title: string; d
     revalidatePath("/");
 }
 
-export const updateTodoListAction = async ()=>{
-    
+export const updateTodoListAction = async (
+    id: string,
+    data: {
+        title: string;
+        description?: string;
+        completed?: boolean;
+    }
+)=>{
+    await prisma.todo.update({
+        where: { id },
+        data: {
+            title: data.title,
+            description: data.description ?? null,
+            completed: data.completed ?? false,
+        }
+    })
+    revalidatePath("/");
 }
 
 export const deleteTodoListAction = async (id: string)=>{
