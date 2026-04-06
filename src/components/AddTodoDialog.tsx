@@ -21,10 +21,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 // ** Assets
 import { Plus } from "lucide-react";
 import { createTodoListAction } from "../../actions/todo.actions";
+import { useRouter } from "next/navigation";
 
 
 
 export function AddTodoDialog() {
+    // ** Hooks && Tools
+    const router = useRouter();
+
+
+
     const todoFormSchema = z.object({
         title: z
         .string()
@@ -49,6 +55,7 @@ export function AddTodoDialog() {
     });
     const onSubmit = async (data: TodoFormValues) => {
         await createTodoListAction({title: data.title, description: data.description})
+        router.refresh();
     };
 
 
@@ -114,8 +121,9 @@ export function AddTodoDialog() {
                     Cancel
                     </Button>
                 </DialogClose>
-
-                <Button type="submit">Save Task</Button>
+                <DialogClose asChild>
+                    <Button type="submit">Save Task</Button>
+                </DialogClose>
                 </div>
             </div>
             </form>

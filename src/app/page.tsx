@@ -3,11 +3,17 @@ import DashboardCard from "@/components/cards/DashboardCard";
 import { DashboardTable } from "@/components/table/DashboardTable";
 // ** Assets
 import { Gauge, NotebookText, Zap } from "lucide-react";
+import { getTodosListAction } from "../../actions/todo.actions";
 
 
 
 
 export default async function Home() {
+    // ** Data
+    const todo = await getTodosListAction()
+
+
+
     return (
         <main className="flex flex-col gap-8 p-6 min-h-screen bg-background">
             {/* Header Section */}
@@ -51,7 +57,7 @@ export default async function Home() {
                     <h2 className="text-lg font-semibold text-foreground">Recent Operations</h2>
                     <p className="text-sm text-muted-foreground">Monitor and manage your current task queue.</p>
                 </div>
-                <DashboardTable />
+                <DashboardTable todo={todo}/>
             </section>
 
         </main>
