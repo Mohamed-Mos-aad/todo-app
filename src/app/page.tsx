@@ -16,8 +16,11 @@ export default async function Home() {
 
     // ** Handlers
     const calcComplationRateHandler = ()=>{
-        const complate = todo.filter(item => item.completed)
-        return ((complate.length / todo.length) * 100)
+        const rate = todo.length
+            ? ((todo.filter(item => item.completed).length / todo.length) * 100).toFixed()
+            : 0;
+
+        return rate + "%";
     }
 
 
@@ -40,14 +43,14 @@ export default async function Home() {
                     icon={<NotebookText className="size-5" />}
                     state="+12%"
                     title="ACTIVE TASKS"
-                    value={todo.length.toFixed()}
+                    value={todo.length.toString()}
                     key="ACTIVE TASKS"
                 />
                 <DashboardCard
                     icon={<Gauge className="size-5" />}
                     state="Stable"
                     title="COMPLETION RATE"
-                    value={calcComplationRateHandler().toFixed() + "%"}
+                    value={calcComplationRateHandler()}
                     key="Completion Rate"
                 />
                 <DashboardCard
