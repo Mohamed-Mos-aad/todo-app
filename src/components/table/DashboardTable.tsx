@@ -1,6 +1,7 @@
 'use client'
 // ** Hooks && Tools
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 // ** Components
 import {
     Table,
@@ -13,7 +14,7 @@ import {
 import { PaginationDemo } from "@/components/PaginationDemo";
 import { Button } from "@/components/ui/button";
 // ** Assets
-import { Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 // ** Actions
 import { deleteTodoListAction } from "../../../actions/todo.actions";
 import { todoProps } from "@/types";
@@ -24,12 +25,18 @@ import { AddTodoDialog } from "../AddTodoDialog";
 export function DashboardTable({todo}: {todo: todoProps[]}) {
     // ** Hooks && Tools
     const router = useRouter();
+    const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
 
     // ** Handlers
     const deleteTodoHandler = async (id: string)=>{
-        await deleteTodoListAction(id);
-        router.refresh();
+        setPendingDeleteId(id);
+        try {
+            await deleteTodoListAction(id);
+            router.refresh();
+        } finally {
+            setPendingDeleteId(null);
+        }
     }
 
 
@@ -60,8 +67,18 @@ export function DashboardTable({todo}: {todo: todoProps[]}) {
                             <TableCell className="text-right px-6">
                                 <div className="flex justify-end gap-2">
                                     <AddTodoDialog todo={todo} />
-                                    <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-destructive" onClick={()=>{deleteTodoHandler(todo.id)}}>
-                                        <Trash2 className="size-4" />
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="size-8 text-muted-foreground hover:text-destructive"
+                                        onClick={()=>{deleteTodoHandler(todo.id)}}
+                                        disabled={pendingDeleteId === todo.id}
+                                    >
+                                        {pendingDeleteId === todo.id ? (
+                                            <Loader2 className="size-4 animate-spin" />
+                                        ) : (
+                                            <Trash2 className="size-4" />
+                                        )}
                                     </Button>
                                 </div>
                             </TableCell>

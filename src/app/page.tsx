@@ -14,6 +14,13 @@ export default async function Home() {
     const todo = await getTodosListAction()
 
 
+    // ** Handlers
+    const calcComplationRateHandler = ()=>{
+        const complate = todo.filter(item => item.completed)
+        return ((complate.length / todo.length) * 100)
+    }
+
+
 
     return (
         <main className="flex flex-col gap-8 p-6 min-h-screen bg-background">
@@ -33,14 +40,14 @@ export default async function Home() {
                     icon={<NotebookText className="size-5" />}
                     state="+12%"
                     title="ACTIVE TASKS"
-                    value="12"
+                    value={todo.length.toFixed()}
                     key="ACTIVE TASKS"
                 />
                 <DashboardCard
                     icon={<Gauge className="size-5" />}
                     state="Stable"
                     title="COMPLETION RATE"
-                    value="94.2%"
+                    value={calcComplationRateHandler().toFixed() + "%"}
                     key="Completion Rate"
                 />
                 <DashboardCard

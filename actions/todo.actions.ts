@@ -1,21 +1,26 @@
 'use server'
-import { revalidatePath } from "next/cache";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma";
 
 export const getTodosListAction = async ()=>{
     return await prisma.todo.findMany();
 }
 
-export const createTodoListAction = async ({title,description}:{title: string; description?: string})=>{
+export const createTodoListAction = async ({
+    title,
+    description,
+    completed,
+}: {
+    title: string;
+    description?: string;
+    completed?: boolean;
+})=>{
     await prisma.todo.create({
         data:{
             title,
             description,
+            completed: completed ?? false,
         }
     })
-    revalidatePath("/");
 }
 
 export const updateTodoListAction = async (
@@ -34,12 +39,10 @@ export const updateTodoListAction = async (
             completed: data.completed ?? false,
         }
     })
-    revalidatePath("/");
 }
 
 export const deleteTodoListAction = async (id: string)=>{
     await prisma.todo.delete({
         where: { id }
     })
-    revalidatePath("/");
 }

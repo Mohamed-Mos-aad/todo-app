@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useEffect, useState } from "react";
 // ** Components
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 // ** Assets
-import { Edit, Plus } from "lucide-react";
+import { Edit, Loader2, Plus } from "lucide-react";
 import { createTodoListAction, updateTodoListAction } from "../../actions/todo.actions";
 import { useRouter } from "next/navigation";
 // ** Interfaces
@@ -31,6 +32,7 @@ export function AddTodoDialog({todo}: {todo?: todoProps}) {
     // ** Hooks && Tools
     const router = useRouter();
     const isEditMode = Boolean(todo);
+    const [open, setOpen] = useState(false);
 
     const todoFormSchema = z.object({
         title: z
@@ -54,31 +56,49 @@ export function AddTodoDialog({todo}: {todo?: todoProps}) {
             completed: todo?.completed ?? false,
         },
     });
+
+    const { isSubmitting } = form.formState;
+
+    useEffect(() => {
+        if (!open) return;
+
+        form.reset({
+            title: todo?.title ?? "",
+            description: todo?.description ?? "",
+            completed: todo?.completed ?? false,
+        });
+    }, [form, open, todo]);
+
     const onSubmit = async (data: TodoFormValues) => {
         if (isEditMode && todo) {
             await updateTodoListAction(todo.id, {
                 title: data.title,
                 description: data.description || "",
-                completed: data.completed || false,
+                completed: data.completed ?? false,
             })
         } else {
-            await createTodoListAction({title: data.title, description: data.description})
+            await createTodoListAction({
+                title: data.title,
+                description: data.description,
+                completed: data.completed ?? false,
+            })
         }
+        setOpen(false);
         router.refresh();
     };
 
 
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
             {
                 isEditMode ? 
-                <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-primary">
+                <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-primary" disabled={isSubmitting}>
                     <Edit className="size-4" />
                 </Button>
                 :
-                <Button className="w-full font-semibold shadow-sm gap-2">
+                <Button className="w-full font-semibold shadow-sm gap-2" disabled={isSubmitting}>
                     <Plus className="size-4" />
                     New Task
                 </Button>
@@ -105,6 +125,7 @@ export function AddTodoDialog({todo}: {todo?: todoProps}) {
                     id="title"
                     {...form.register("title")}
                     placeholder="e.g., Database Migration"
+                    disabled={isSubmitting}
                     />
                     {form.formState.errors.title && (
                     <p className="text-red-500 text-xs">
@@ -118,11 +139,13 @@ export function AddTodoDialog({todo}: {todo?: todoProps}) {
                     id="description"
                     {...form.register("description")}
                     placeholder="Provide operational context..."
+                    disabled={isSubmitting}
                     />
                 </div>
                 <div className="flex items-center space-x-3 rounded-lg border p-3">
                     <Checkbox
                     checked={form.watch("completed")}
+                    disabled={isSubmitting}
                     onCheckedChange={(val) =>
                         form.setValue("completed", !!val)
                     }
@@ -134,15 +157,14 @@ export function AddTodoDialog({todo}: {todo?: todoProps}) {
                 {/* Actions */}
                 <div className="flex justify-end gap-3 pt-2">
                 <DialogClose asChild>
-                    <Button variant="ghost" type="button">
+                    <Button variant="ghost" type="button" disabled={isSubmitting}>
                     Cancel
                     </Button>
                 </DialogClose>
-                <DialogClose asChild>
-                    <Button type="submit">
-                        {isEditMode ? "Update Task" : "Save Task"}
-                    </Button>
-                </DialogClose>
+                <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting && <Loader2 className="size-4 animate-spin" />}
+                    {isSubmitting ? (isEditMode ? "Updating..." : "Saving...") : (isEditMode ? "Update Task" : "Save Task")}
+                </Button>
                 </div>
             </div>
             </form>
