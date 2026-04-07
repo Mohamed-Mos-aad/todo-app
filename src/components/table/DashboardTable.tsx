@@ -28,12 +28,16 @@ export function DashboardTable({
     pageSize,
     totalItems,
     totalPages,
+    showPagination = true,
+    footerMessage,
 }: {
     todo: todoProps[];
     currentPage: number;
     pageSize: number;
     totalItems: number;
     totalPages: number;
+    showPagination?: boolean;
+    footerMessage?: string;
 }) {
     // ** Hooks && Tools
     const router = useRouter();
@@ -107,9 +111,17 @@ export function DashboardTable({
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2 pt-2 border-t border-border/50">
                 <p className="text-sm text-nowrap text-muted-foreground">
-                    Showing <span className="font-medium text-foreground">{totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalItems)}</span> of <span className="font-medium text-foreground">{totalItems}</span> todos
+                    {showPagination ? (
+                        <>
+                            Showing <span className="font-medium text-foreground">{totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalItems)}</span> of <span className="font-medium text-foreground">{totalItems}</span> todos
+                        </>
+                    ) : (
+                        footerMessage ?? "Showing the latest tasks snapshot."
+                    )}
                 </p>
-                <PaginationDemo currentPage={currentPage} totalPages={totalPages} />
+                {showPagination && (
+                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} />
+                )}
             </div>
         </div>
     )

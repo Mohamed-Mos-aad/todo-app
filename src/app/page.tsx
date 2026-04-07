@@ -3,41 +3,25 @@ import DashboardCard from "@/components/cards/DashboardCard";
 import { DashboardTable } from "@/components/table/DashboardTable";
 // ** Assets
 import { Gauge, NotebookText, Zap } from "lucide-react";
-import { redirect } from "next/navigation";
 import { getTodosListAction } from "../../actions/todo.actions";
 
-const PAGE_SIZE = 5;
+const DASHBOARD_LIMIT = 5;
 
 
 
-export default async function Home({
-    searchParams,
-}: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-    const params = await searchParams;
-    const pageParam = Array.isArray(params.page) ? params.page[0] : params.page;
-    const requestedPage = Number.parseInt(pageParam ?? "1", 10);
-    const page = Number.isNaN(requestedPage) || requestedPage < 1 ? 1 : requestedPage;
-
-    // ** Data
+export default async function Home() {
     const {
-        items: todo,
-        currentPage,
-        pageSize,
         totalCount,
-        totalPages,
         completedCount,
         createdThisWeek,
         createdLastWeek,
-    } = await getTodosListAction({
-        page,
-        pageSize: PAGE_SIZE,
-    });
+    } = await getTodosListAction({ page: 1, pageSize: 1 });
 
-    if (page !== currentPage) {
-        redirect(currentPage === 1 ? "/" : `/?page=${currentPage}`);
-    }
+    const latestUncompletedTodos = await getTodosListAction({
+        page: 1,
+        pageSize: DASHBOARD_LIMIT,
+        completed: false,
+    });
 
 
     // ** Handlers
@@ -88,7 +72,7 @@ export default async function Home({
                     icon={<NotebookText className="size-5" />}
                     state="+12%"
                     title="ACTIVE TASKS"
-                    value={totalCount.toString()}
+                    value={activeTasks.toString()}
                     key="ACTIVE TASKS"
                 />
                 <DashboardCard
@@ -110,15 +94,17 @@ export default async function Home({
             {/* Table Section */}
             <section className="mt-4">
                 <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-foreground">Recent Operations</h2>
-                    <p className="text-sm text-muted-foreground">Monitor and manage your current task queue.</p>
+                    <h2 className="text-lg font-semibold text-foreground">Latest Unfinished Tasks</h2>
+                    <p className="text-sm text-muted-foreground">Showing your latest {DASHBOARD_LIMIT} tasks that are still in progress.</p>
                 </div>
                 <DashboardTable
-                    todo={todo}
-                    currentPage={currentPage}
-                    pageSize={pageSize}
-                    totalItems={totalCount}
-                    totalPages={totalPages}
+                    todo={latestUncompletedTodos.items}
+                    currentPage={1}
+                    pageSize={latestUncompletedTodos.pageSize}
+                    totalItems={latestUncompletedTodos.totalCount}
+                    totalPages={latestUncompletedTodos.totalPages}
+                    showPagination={false}
+                    footerMessage={`Showing latest ${latestUncompletedTodos.items.length} unfinished tasks.`}
                 />
             </section>
 
