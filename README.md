@@ -1,36 +1,126 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Todo App
+
+A modern Todo dashboard built with **Next.js 16**, **Prisma**, and **MongoDB**.
+
+This is my first project where I handled both sides of the product:
+- Frontend experience and UI flow
+- Backend data logic with Prisma + MongoDB
+
+It marks my shift from "UI-only projects" to building full features end-to-end.
+
+## Why This Project Matters
+
+Most Todo apps are frontend demos.
+This one focuses on real product behavior:
+
+- Persistent data in MongoDB
+- Server Actions for CRUD operations
+- Server-side pagination
+- Real dashboard metrics (completion rate + weekly velocity)
+
+## Features
+
+- Create, edit, and delete todos
+- Form validation with `zod` + `react-hook-form`
+- Server-rendered data with App Router
+- URL-based pagination (`?page=...`)
+- Weekly activity insights
+- Responsive dashboard layout
+- Light/Dark theme support
+
+## Tech Stack
+
+| Layer | Tools |
+| --- | --- |
+| Framework | Next.js 16 (App Router), React 19 |
+| Language | TypeScript |
+| Styling | Tailwind CSS 4, shadcn/ui |
+| Data Access | Prisma |
+| Database | MongoDB |
+| Validation | Zod, React Hook Form |
+
+## Project Structure (Highlights)
+
+- `src/app/page.tsx`  
+  Main dashboard page, reads `searchParams`, requests paginated data, and renders stats.
+
+- `actions/todo.actions.ts`  
+  Server Actions for Todo CRUD, pagination, and dashboard metrics.
+
+- `prisma/schema.prisma`  
+  Prisma schema and MongoDB datasource.
+
+## Database Model
+
+```prisma
+model Todo { 
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+```
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Create `.env`
+
+```env
+DATABASE_URL="mongodb+srv://<username>:<password>@<cluster-url>/<db-name>?retryWrites=true&w=majority"
+```
+
+### 3. Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+### 4. Start development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open: `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - Run in development mode
+- `npm run build` - Generate Prisma client, then build Next.js
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
-## Learn More
+## Optional Seed
 
-To learn more about Next.js, take a look at the following resources:
+A seed file exists at `prisma/seed.ts`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npx prisma db seed
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## What I Learned
 
-## Deploy on Vercel
+- How to design backend logic with Next.js Server Actions
+- How to use Prisma with MongoDB in a real app flow
+- How to implement server-side pagination with `skip` and `take`
+- How to move from static UI cards to data-driven dashboard metrics
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Roadmap
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Add search and filters
+- Add authentication
+- Add priority and due dates
+- Add tests
+- Deploy to production
+
+## Author Note
+
+This project represents a major milestone in my journey as a developer.
+Not just building screens, but owning the full feature lifecycle from UI to database.
