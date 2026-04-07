@@ -22,7 +22,19 @@ import { AddTodoDialog } from "../AddTodoDialog";
 
 
 
-export function DashboardTable({todo}: {todo: todoProps[]}) {
+export function DashboardTable({
+    todo,
+    currentPage,
+    pageSize,
+    totalItems,
+    totalPages,
+}: {
+    todo: todoProps[];
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+}) {
     // ** Hooks && Tools
     const router = useRouter();
     const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
@@ -54,9 +66,15 @@ export function DashboardTable({todo}: {todo: todoProps[]}) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {todo.map((todo, index) => (
+                    {todo.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                                No todos found.
+                            </TableCell>
+                        </TableRow>
+                    ) : todo.map((todo, index) => (
                         <TableRow key={todo.id} className="hover:bg-muted/30 transition-colors border-border">
-                            <TableCell className="font-medium text-muted-foreground">{index + 1}</TableCell>
+                            <TableCell className="font-medium text-muted-foreground">{(currentPage - 1) * pageSize + index + 1}</TableCell>
                             <TableCell className="font-semibold text-foreground">{todo.title}</TableCell>
                             <TableCell>
                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground border border-border">
@@ -89,9 +107,9 @@ export function DashboardTable({todo}: {todo: todoProps[]}) {
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2 pt-2 border-t border-border/50">
                 <p className="text-sm text-nowrap text-muted-foreground">
-                    Showing <span className="font-medium text-foreground">1-3</span> of <span className="font-medium text-foreground">12</span> active todos
+                    Showing <span className="font-medium text-foreground">{totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalItems)}</span> of <span className="font-medium text-foreground">{totalItems}</span> todos
                 </p>
-                <PaginationDemo />
+                <PaginationDemo currentPage={currentPage} totalPages={totalPages} />
             </div>
         </div>
     )
